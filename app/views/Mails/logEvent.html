@@ -1,0 +1,12 @@
+
+
+<ul>
+     #{list items:eventsList, as:'e'}
+     <li>
+     <b> ${e.getLevel().toString()}</b><br>
+     ${e.getRenderedMessage()}
+     </li>
+     #{/list}
+</ul>
+
+

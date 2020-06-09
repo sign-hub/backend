@@ -1,0 +1,11 @@
+# Application dependencies
+
+require:
+    - play
+    - eSecurePlay1 -> eSecurePlay1 latest.integration
+repositories:
+    - EcletticaModules:
+        type:       local
+        artifact:   ${application.path}/../[module]
+        contains:
+            - eSecurePlay1

@@ -1,0 +1,145 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+
+
+
+# ~~~~
+#GET		/aaa									BaseController.test
+# Home page
+GET     /                                       UserNotLoggedController.index
+
+# TESTINGTOOL TEST
+*		/testingtool/test/{testId}				TestController.testingtoolTest(testId)
+*		/testingtool/test						TestController.testingtoolTest
+*		/test/{testId}							TestController.testingtoolTest(testId)
+*		/test									TestController.testingtoolTest
+*		/sortquestions							TestController.sortQuestions
+*		/sortslides								TestController.sortSlides
+POST	/cloneTest								TestController.cloneTest
+OPTIONS	/cloneTest								TestController.cloneTest
+*		/testingtool/sortquestions				TestController.sortQuestions
+POST	/testingtool/cloneTest					TestController.cloneTest
+
+# ATLAS TEST
+*		/atlas/test/{testId}					TestController.atlasTest(testId)
+*		/atlas/test								TestController.atlasTest
+*		/atlas/sortquestions					TestController.sortQuestions
+POST	/atlas/cloneTest						TestController.cloneTest
+POST	/atlas/management						TestController.atlasManagement
+
+#GRAMMAR TOOL
+*		/grammar								GrammarController.grammar
+*		/grammarpart							GrammarController.grammarPart
+
+
+
+
+*	/deleteAll									BaseController.cleanAll
+
+*		/question								QuestionController.question
+*		/question/{questionId}					QuestionController.question(questionId)
+POST	/importQuestion							QuestionController.importQuestion
+OPTIONS	/importQuestion							QuestionController.importQuestion
+
+*		/slide									SlideController.slide
+*		/slide/{slideId}						SlideController.slide(slideId)
+POST	/cloneSlide								SlideController.cloneSlide
+OPTIONS	/cloneSlide								SlideController.cloneSlide
+
+GET		/media/retrieve							MediaController.retrieve(repositoryId, thumb, thumbId)
+GET		/media/retrieve							MediaController.retrieve(repositoryId, thumb)
+GET		/media/retrieve							MediaController.retrieve(repositoryId)
+*		/media/retrieve							MediaController.retrieve
+#*		/media/{mediaId}						MediaController.media(mediaId)
+*		/media									MediaController.testingtoolMedia
+*		/testingtool/media						MediaController.testingtoolMedia
+*		/atlas/media							MediaController.atlasMedia
+*		/grammar/media							MediaController.grammarMedia
+*		/testingtool/media/{mediaId}			MediaController.testingtoolMedia(mediaId)
+*		/atlas/media/{mediaId}					MediaController.atlasMedia(mediaId)
+*		/grammar/media/{mediaId}				MediaController.grammarMedia(mediaId)
+
+*		/retrievePublic							BaseController.retrievePublic
+
+*		/report/{reportId}						ReportController.report(reportId, type:'TESTINGTOOL')
+*		/report									ReportController.report(null, type:'TESTINGTOOL')
+*		/testingtool/report/{reportId}			ReportController.report(reportId, type:'TESTINGTOOL')
+*		/testingtool/report						ReportController.report(null, , type:'TESTINGTOOL')
+*		/atlas/report/{reportId}				ReportController.report(reportId, type:'ATLAS')
+*		/atlas/report							ReportController.report(null, type:'ATLAS')
+*		/reportcsv/{reportId}					ReportController.reportCsv(reportId)
+*		/reportcsvpublic/{code}					BaseController.retrievePublicCsv(code)
+*		/reportjson/{reportId}					ReportController.reportJson(reportId)
+
+*		/atlas/generateReport					ReportController.generateReport
+*		/atlas/checkReport						ReportController.checkReport
+*		/atlas/downloadReport					ReportController.downloadReport
+*		/atlas/generateFeatures					ReportController.generateFeatures
+*		/atlas/checkFeatures					ReportController.checkFeatures
+
+
+*		/reportUploaded/{reportUuid}			UserNotLoggedController.getUploadedMediaList(reportUuid)
+
+*		/user									UserLoggedController.user
+*		/user/{userId}							UserLoggedController.user(userId)
+POST	/login									UserNotLoggedController.login
+OPTIONS	/login									UserNotLoggedController.login
+POST	/loginRecovery							UserNotLoggedController.loginRecovery
+OPTIONS	/loginRecovery							UserNotLoggedController.loginRecovery
+POST	/passwordRecover						UserNotLoggedController.loginRecovery
+OPTIONS	/passwordRecover						UserNotLoggedController.loginRecovery
+POST	/passwordReset							UserNotLoggedController.passwordReset
+OPTIONS	/passwordReset							UserNotLoggedController.passwordReset
+POST	/logout									UserLoggedController.logout
+OPTIONS	/logout									UserLoggedController.logout
+
+POST	/requestRegistration					UserNotLoggedController.requestRegistration
+
+GET		/createTopics							UserNotLoggedController.createTopics
+GET		/createUsers							UserLoggedController.createUsers
+
+GET		/createFeatures							UserNotLoggedController.createFeatures
+GET		/createMultipleFeatures					UserNotLoggedController.createMultipleFeatures
+
+
+GET 	/downloadGrammar/{grammarId}/pdf		UserNotLoggedController.getPublicGrammarPdf(grammarId)
+GET 	/downloadGrammar/{grammarId}/html		UserNotLoggedController.getPublicGrammarHtml(grammarId)
+
+*		/getLanguages							UserNotLoggedController.getLanguages
+*		/getSignLanguages						UserNotLoggedController.getSignLanguages
+*		/getSignLanguage						UserNotLoggedController.getSignLanguage
+
+*		/contact								UserLoggedController.contact
+*		/contact/{param}						UserLoggedController.contact(param)
+
+#####SIGN-HUB PLATFORM
+
+GET		/getFeatures							SignHubPublicController.getFeatures
+GET		/getFeaturesMap							SignHubPublicController.getFeaturesMap
+GET		/signhub/getFeatures					SignHubPublicController.getFeatures
+GET		/signhub/getFeaturesMap					SignHubPublicController.getFeaturesMap
+GET		/signhub/getFeaturesTree				SignHubPublicController.getFeaturesTree
+
+*		/signhub/searchByFeatures				SignHubPublicController.searchByFeatures
+GET		/signhub/getFeaturesMapByLanguage		SignHubPublicController.getFeaturesMapByLanguage
+
+*		/signhub/grammarSearch					SignHubPublicController.grammarSearch
+*		/signhub/grammar						SignHubPublicController.grammar
+*		/signhub/grammarpart					SignHubPublicController.grammarPart
+
+*		/signhub/getLanguages					UserNotLoggedController.getLanguages
+*		/signhub/getSignLanguages				UserNotLoggedController.getSignLanguages
+*		/signhub/getSignLanguage				UserNotLoggedController.getSignLanguage
+
+GET		/signhub/extractFeatures				SignHubPublicController.extractFeatures
+GET		/signhub/extractSignLanguages			SignHubPublicController.extractSignLanguages
+
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/                                staticDir:public
+
+# Catch all
+*       /{controller}/{action}                  {controller}.{action}

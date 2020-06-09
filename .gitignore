@@ -1,0 +1,13 @@
+/bin/
+eclipse/classes/
+/tmp/
+/test-result/
+target/
+/precompiled/
+repository
+*.bak
+*.swp
+.metadata
+.DS_Store
+hs_err_pid*
+.settings/sonarlint/*

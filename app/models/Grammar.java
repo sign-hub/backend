@@ -17,12 +17,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
-import models.Grammar.GrammarStatus;
 import utils.StringUtil;
 
 @Entity
 public class Grammar extends ModelUuid {
-	
+
 	public static enum GrammarStatus {
 		NEW, DRAFT, PUBLISHED, SYSTEMTOC;
 
@@ -43,68 +42,70 @@ public class Grammar extends ModelUuid {
 
 	@Basic
 	private String grammarName;
-	
+
 	@Basic
 	private String grammarSignHubSeries;
 	@Basic
 	private Integer grammarSignHubSeriesNumber;
-	
+
 	@Lob
 	private String grammarOtherSignHubSeries;
 	@Lob
 	private String grammarEditorialInfo;
 	@Lob
 	private String grammarCopyrightInfo;
-	@Basic
+	@Lob
 	private String grammarISBNInfo;
-	@Basic
+	@Lob
 	private String grammarBibliographicalReference;
-	
+	@Lob
+	private String editedBy;
+
 	@Basic
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH })
-	@JoinColumn(name="signlanguage_uuid")
+	@JoinColumn(name = "signlanguage_uuid")
 	SignLanguage signLanguage;
-	
+
 	@Basic
 	String languageVersion;
-	
+
 	@Basic
 	@Enumerated(EnumType.STRING)
 	private GrammarStatus grammarStatus;
-	
+
 	@Basic
 	private Date revisionDate = new Date();
-	
+
 	@Basic
 	private Date creationDate = new Date();
 
 	@Transient
 	public static final String REVISION_DATE_FORMAT = "dd_MM_yyyy_HH:mm:ss:SSS";
-	
+
 	@Transient
 	public static final String CREATION_DATE_FORMAT = "yyyy MM dd HH:mm:ss:SSS";
-	
+
 	@Basic
 	@ManyToOne(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	private User author;
 
 	@Basic
 	private Boolean deleted = false;
-	
+
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH })
-	@JoinTable(name="grammar_editoruser")
+	@JoinTable(name = "grammar_editoruser")
 	private List<User> editorList;
-	
+
 	@ManyToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH })
-	@JoinTable(name="grammar_contentprovideruser")
+	@JoinTable(name = "grammar_contentprovideruser")
 	private List<User> contentProviderList;
-	
+
 	@OneToMany(cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH, CascadeType.DETACH })
 	private List<GrammarPart> parts = new LinkedList<GrammarPart>();
-	
+
 	@Basic
 	private String htmlPath;
-	
+
 	@Basic
 	private String pdfPath;
 
@@ -179,8 +180,6 @@ public class Grammar extends ModelUuid {
 	public void setParts(LinkedList<GrammarPart> parts) {
 		this.parts = parts;
 	}
-	
-	
 
 	public String getHtmlPath() {
 		return htmlPath;
@@ -199,37 +198,38 @@ public class Grammar extends ModelUuid {
 	}
 
 	public static List<Grammar> findAllOrdered(String orderby, String ordertype) {
-		if(StringUtil.isNil(orderby) || StringUtil.isNil(ordertype))
-			return Grammar.find("deleted=:deleted and grammarStatus!=:status").setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
-		return Grammar.find("deleted=:deleted and grammarStatus!=:status order by " +orderby + " " +ordertype).setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
+		if (StringUtil.isNil(orderby) || StringUtil.isNil(ordertype))
+			return Grammar.find("deleted=:deleted and grammarStatus!=:status").setParameter("deleted", false)
+					.setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
+		return Grammar.find("deleted=:deleted and grammarStatus!=:status order by " + orderby + " " + ordertype)
+				.setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
 
 	}
 
 	public static List<Grammar> findAllForUserOrdered(User currentUserLogged, String orderby, String ordertype) {
-		if(StringUtil.isNil(orderby) || StringUtil.isNil(ordertype))
-			return Grammar.find("deleted=:deleted and grammarStatus!=:status").setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
-		return Grammar.find("deleted=:deleted and grammarStatus!=:status  order by " +orderby + " " +ordertype).setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
+		if (StringUtil.isNil(orderby) || StringUtil.isNil(ordertype))
+			return Grammar.find("deleted=:deleted and grammarStatus!=:status").setParameter("deleted", false)
+					.setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
+		return Grammar.find("deleted=:deleted and grammarStatus!=:status  order by " + orderby + " " + ordertype)
+				.setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
 	}
 
 	public static List<Grammar> findAllPublished(String orderby, String ordertype) {
-		return Grammar.find("grammarStatus=:status  order by " +orderby + " " +ordertype).setParameter("status", GrammarStatus.PUBLISHED).fetch();
+		return Grammar.find("grammarStatus=:status  order by " + orderby + " " + ordertype)
+				.setParameter("status", GrammarStatus.PUBLISHED).fetch();
 	}
 
-	
-	
-	public static List<Grammar> findAllForUserEditor(User currentUserLogged, String orderby,
-			String ordertype) {
-		if(true)
-			return Grammar.find("deleted=:deleted and grammarStatus!=:status").setParameter("deleted", false).setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
-		String q = "(author=:user or :user MEMBER OF editorList) order by " +orderby + " " +ordertype;
-		
-		return Grammar.find(q)
-				.setParameter("user", currentUserLogged)
-				.fetch();
+	public static List<Grammar> findAllForUserEditor(User currentUserLogged, String orderby, String ordertype) {
+		if (true)
+			return Grammar.find("deleted=:deleted and grammarStatus!=:status").setParameter("deleted", false)
+					.setParameter("status", GrammarStatus.SYSTEMTOC).fetch();
+		String q = "(author=:user or :user MEMBER OF editorList) order by " + orderby + " " + ordertype;
+
+		return Grammar.find(q).setParameter("user", currentUserLogged).fetch();
 	}
 
 	public boolean isPublished() {
-		if(this.grammarStatus.equals(GrammarStatus.PUBLISHED))
+		if (this.grammarStatus.equals(GrammarStatus.PUBLISHED))
 			return true;
 		return false;
 	}
@@ -289,8 +289,14 @@ public class Grammar extends ModelUuid {
 	public void setGrammarBibliographicalReference(String grammarBibliographicalReference) {
 		this.grammarBibliographicalReference = grammarBibliographicalReference;
 	}
-	
-	
+
+	public String getEditedBy() {
+		return editedBy;
+	}
+
+	public void setEditedBy(String editedBy) {
+		this.editedBy = editedBy;
+	}
 
 	public SignLanguage getSignLanguage() {
 		return signLanguage;
@@ -299,8 +305,6 @@ public class Grammar extends ModelUuid {
 	public void setSignLanguage(SignLanguage signLanguage) {
 		this.signLanguage = signLanguage;
 	}
-	
-	
 
 	public String getLanguageVersion() {
 		return languageVersion;
@@ -313,14 +317,15 @@ public class Grammar extends ModelUuid {
 	public static List<Grammar> findBySignLanguage(SignLanguage sl) {
 		return find("signLanguage=:sl").setParameter("sl", sl).fetch();
 	}
-	
+
 	public static Grammar findBySignLanguageAndVersion(SignLanguage sl, String version) {
-		return find("signLanguage=:sl and languageVersion=:languageVersion").setParameter("sl", sl).setParameter("languageVersion", version).first();
+		return find("signLanguage=:sl and languageVersion=:languageVersion").setParameter("sl", sl)
+				.setParameter("languageVersion", version).first();
 	}
 
 	public static Grammar findSystemToc() {
-		return Grammar.find("grammarStatus=:grammarStatus").setParameter("grammarStatus", GrammarStatus.SYSTEMTOC).first();
+		return Grammar.find("grammarStatus=:grammarStatus").setParameter("grammarStatus", GrammarStatus.SYSTEMTOC)
+				.first();
 	}
 
-	
 }

@@ -208,7 +208,13 @@ public class BaseController extends Controller {
 			renderBinary(f);
 	}
 
-	
+	// public static void test() {
+	// File t = MediaService.instance()
+	// .extractFirstVideoFrame(new
+	// File("/home/luca/work/eclettica/Progetti/Volumeet/video
+	// prova/small.mp4"));
+	// renderBinary(t);
+	// }
 	
 	public static void cleanAll(){
 		if(true) {

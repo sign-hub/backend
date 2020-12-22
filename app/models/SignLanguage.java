@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.Lob;
 import javax.persistence.Transient;
 
 import utils.StringUtil;
@@ -40,6 +41,36 @@ public class SignLanguage extends ModelUuid  {
 	
 	@Transient
 	private String grammarReference;
+	
+	@Basic
+	private String cpPHON;
+	
+	@Lob
+	private String ackPHON;
+	
+	@Basic
+	private String cpLEX;
+	
+	@Lob
+	private String ackLEX;
+	
+	@Basic
+	private String cpMORPH;
+	
+	@Lob
+	private String ackMORPH;
+	
+	@Basic
+	private String cpSYN;
+	
+	@Lob
+	private String ackSYN;
+	
+	@Basic
+	private String cpPRAG;
+	
+	@Lob
+	private String ackPRAG;
 	
 	
 	
@@ -154,5 +185,67 @@ public class SignLanguage extends ModelUuid  {
 	public void setOfficialCode(String officialCode) {
 		this.officialCode = officialCode;
 	}
+	public String getCpPHON() {
+		return cpPHON;
+	}
+	public void setCpPHON(String cpPHON) {
+		this.cpPHON = cpPHON;
+	}
+	public String getAckPHON() {
+		return ackPHON;
+	}
+	public void setAckPHON(String ackPHON) {
+		this.ackPHON = ackPHON;
+	}
+	public String getCpLEX() {
+		return cpLEX;
+	}
+	public void setCpLEX(String cpLEX) {
+		this.cpLEX = cpLEX;
+	}
+	public String getAckLEX() {
+		return ackLEX;
+	}
+	public void setAckLEX(String ackLEX) {
+		this.ackLEX = ackLEX;
+	}
+	public String getCpMORPH() {
+		return cpMORPH;
+	}
+	public void setCpMORPH(String cpMORPH) {
+		this.cpMORPH = cpMORPH;
+	}
+	public String getAckMORPH() {
+		return ackMORPH;
+	}
+	public void setAckMORPH(String ackMORPH) {
+		this.ackMORPH = ackMORPH;
+	}
+	public String getCpSYN() {
+		return cpSYN;
+	}
+	public void setCpSYN(String cpSYN) {
+		this.cpSYN = cpSYN;
+	}
+	public String getAckSYN() {
+		return ackSYN;
+	}
+	public void setAckSYN(String ackSYN) {
+		this.ackSYN = ackSYN;
+	}
+	public String getCpPRAG() {
+		return cpPRAG;
+	}
+	public void setCpPRAG(String cpPRAG) {
+		this.cpPRAG = cpPRAG;
+	}
+	public String getAckPRAG() {
+		return ackPRAG;
+	}
+	public void setAckPRAG(String ackPRAG) {
+		this.ackPRAG = ackPRAG;
+	}
+	
+	
 	
 }

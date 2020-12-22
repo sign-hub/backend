@@ -3,11 +3,9 @@ package schedulers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import core.services.ApiService;
+
 import core.services.UserService;
 import models.Grammar;
 import models.Grammar.GrammarStatus;
@@ -15,21 +13,10 @@ import models.GrammarPart;
 import models.GrammarPart.GrammarPartStatus;
 import models.GrammarPart.GrammarPartType;
 import models.User;
-import models.User.Authorizations;
-import models.User.Roles;
-import net.eclettica.esecure.manager.EsAccountManager;
-import net.eclettica.esecure.models.EsAuth;
-import net.eclettica.esecure.models.EsRole;
-import play.Logger;
-import play.jobs.Job;
-import play.jobs.OnApplicationStart;
-import utils.cfg.CfgUtil;
-import utils.cfg.ConfigManager;
-import utils.cfg.PlayConfigAdapter;
 
-public class AppStart_prova{
+public class AppStart_prova {
 
-	public static Grammar createGrammar(){
+	public static Grammar createGrammar() {
 		Grammar g = new Grammar();
 		User u = UserService.instance().getCurrentUserLogged();
 		g.setAuthor(u);
@@ -44,7 +31,7 @@ public class AppStart_prova{
 		g.setGrammarName("Test");
 		g.setParts(new LinkedList<GrammarPart>());
 		g.save();
-		
+
 		g = addFrontMatter(g, u, contentProviderList, editorList);
 
 		GrammarPart gp = new GrammarPart();
@@ -574,7 +561,7 @@ public class AppStart_prova{
 		gp1.getParts().add(gp2);
 		gp1.save();
 
-		//	gp3 -> figlio di gp2
+		// gp3 -> figlio di gp2
 		GrammarPart gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -592,7 +579,7 @@ public class AppStart_prova{
 		gp2.getParts().add(gp3);
 		gp2.save();
 
-		//	gp4 -> figlio di gp3
+		// gp4 -> figlio di gp3
 		GrammarPart gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -678,7 +665,6 @@ public class AppStart_prova{
 		gp2.getParts().add(gp3);
 		gp2.save();
 
-
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -746,7 +732,6 @@ public class AppStart_prova{
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-
 
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
@@ -3264,7 +3249,6 @@ public class AppStart_prova{
 		gp4.getParts().add(gp5);
 		gp4.save();
 
-
 		gp5 = new GrammarPart();
 		gp5.setAuthor(u);
 		gp5.setContentProviderList(contentProviderList);
@@ -3868,6 +3852,23 @@ public class AppStart_prova{
 		gp3.setElementNumber("4");
 		gp3.setGrammarPartName("2.2.4. Noun-verb pairs: mouthing");
 		gp3.setGrammarPartOrder(4);
+		gp3.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		gp3.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
+		gp3.setHtml("");
+		gp3.setParent(gp2);
+		gp3.setParts(new LinkedList<GrammarPart>());
+		gp3.save();
+		gp2.getParts().add(gp3);
+		gp2.save();
+
+		gp3 = new GrammarPart();
+		gp3.setAuthor(u);
+		gp3.setContentProviderList(contentProviderList);
+		gp3.setDeleted(false);
+		gp3.setEditorList(editorList);
+		gp3.setElementNumber("5");
+		gp3.setGrammarPartName("2.2.5. Attenuative");
+		gp3.setGrammarPartOrder(5);
 		gp3.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp3.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
 		gp3.setHtml("");
@@ -4915,7 +4916,7 @@ public class AppStart_prova{
 		gp3.save();
 		return createGrammar1(g, gp, gp1, gp2, gp3, gp4, u, contentProviderList, editorList);
 	}
-	
+
 	private static Grammar addFrontMatter(Grammar g, User u, List<User> contentProviderList, List<User> editorList) {
 		GrammarPart gp = new GrammarPart();
 		gp.setAuthor(u);
@@ -4923,8 +4924,25 @@ public class AppStart_prova{
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
 		gp.setElementNumber("1");
-		gp.setGrammarPartName("Acknowledgements");
+		gp.setGrammarPartName("List of authors");
 		gp.setGrammarPartOrder(1);
+		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
+		gp.setHtml("List of authors");
+		gp.setParent(null);
+		gp.setParts(new LinkedList<GrammarPart>());
+		gp.save();
+		g.getParts().add(gp);
+		g.save();
+
+		gp = new GrammarPart();
+		gp.setAuthor(u);
+		gp.setContentProviderList(contentProviderList);
+		gp.setDeleted(false);
+		gp.setEditorList(editorList);
+		gp.setElementNumber("2");
+		gp.setGrammarPartName("Acknowledgements");
+		gp.setGrammarPartOrder(2);
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
 		gp.setHtml("Acknowledgements");
@@ -4933,15 +4951,15 @@ public class AppStart_prova{
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
 		gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
-		gp.setElementNumber("2");
+		gp.setElementNumber("3");
 		gp.setGrammarPartName("Introduction");
-		gp.setGrammarPartOrder(2);
+		gp.setGrammarPartOrder(3);
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
 		gp.setHtml("Introduction");
@@ -4950,15 +4968,15 @@ public class AppStart_prova{
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
 		gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
-		gp.setElementNumber("3");
+		gp.setElementNumber("4");
 		gp.setGrammarPartName("List of Abbreviations");
-		gp.setGrammarPartOrder(3);
+		gp.setGrammarPartOrder(4);
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
 		gp.setHtml("List of Abbreviations");
@@ -4967,29 +4985,30 @@ public class AppStart_prova{
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
 		gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
-		gp.setElementNumber("4");
-		gp.setGrammarPartName("List of conventions observed in this book");
-		gp.setGrammarPartOrder(4);
+		gp.setElementNumber("5");
+		gp.setGrammarPartName("List of notational conventions");
+		gp.setGrammarPartOrder(5);
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("List of conventions observed in this book");
+		gp.setHtml("List of notational conventions");
 		gp.setParent(null);
 		gp.setParts(new LinkedList<GrammarPart>());
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
 		return g;
 	}
 
-	//	Parti da qui
-	public static Grammar createGrammar1(Grammar g, GrammarPart gp, GrammarPart gp1, GrammarPart gp2, GrammarPart gp3, GrammarPart gp4, User u, List<User> contentProviderList, List<User> editorList ){
+	// Parti da qui
+	public static Grammar createGrammar1(Grammar g, GrammarPart gp, GrammarPart gp1, GrammarPart gp2, GrammarPart gp3,
+			GrammarPart gp4, User u, List<User> contentProviderList, List<User> editorList) {
 
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
@@ -5756,8 +5775,8 @@ public class AppStart_prova{
 		gp2.getParts().add(gp3);
 		gp2.save();
 
-		//	Parti da qui
-		
+		// Parti da qui
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -6682,7 +6701,8 @@ public class AppStart_prova{
 		gp3.setDeleted(false);
 		gp3.setEditorList(editorList);
 		gp3.setElementNumber("1");
-		gp3.setGrammarPartName("2.3.1. Identification of the basic order of constituents in the main declarative clause");
+		gp3.setGrammarPartName(
+				"2.3.1. Identification of the basic order of constituents in the main declarative clause");
 		gp3.setGrammarPartOrder(1);
 		gp3.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp3.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
@@ -6716,7 +6736,8 @@ public class AppStart_prova{
 		gp4.setDeleted(false);
 		gp4.setEditorList(editorList);
 		gp4.setElementNumber("2");
-		gp4.setGrammarPartName("2.3.1.2. Order of auxiliaries (i.e. agreement, tense and aspectual markers) with respect to the verb");
+		gp4.setGrammarPartName(
+				"2.3.1.2. Order of auxiliaries (i.e. agreement, tense and aspectual markers) with respect to the verb");
 		gp4.setGrammarPartOrder(2);
 		gp4.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp4.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
@@ -6937,7 +6958,8 @@ public class AppStart_prova{
 		gp4.setDeleted(false);
 		gp4.setEditorList(editorList);
 		gp4.setElementNumber("5");
-		gp4.setGrammarPartName("2.3.3.5. Word order variations according to the different types of verbs (plain, agreeing)");
+		gp4.setGrammarPartName(
+				"2.3.3.5. Word order variations according to the different types of verbs (plain, agreeing)");
 		gp4.setGrammarPartOrder(5);
 		gp4.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp4.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
@@ -6954,7 +6976,8 @@ public class AppStart_prova{
 		gp4.setDeleted(false);
 		gp4.setEditorList(editorList);
 		gp4.setElementNumber("6");
-		gp4.setGrammarPartName("2.3.3.6. Word order variations according to the different types of predicates (reversible/irreversible)");
+		gp4.setGrammarPartName(
+				"2.3.3.6. Word order variations according to the different types of predicates (reversible/irreversible)");
 		gp4.setGrammarPartOrder(6);
 		gp4.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp4.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
@@ -8307,7 +8330,7 @@ public class AppStart_prova{
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -8807,7 +8830,8 @@ public class AppStart_prova{
 		gp5.setDeleted(false);
 		gp5.setEditorList(editorList);
 		gp5.setElementNumber("1");
-		gp5.setGrammarPartName("3.5.1.5.1. Non-manual markers and their properties in non- predictive/peripheral conditionals");
+		gp5.setGrammarPartName(
+				"3.5.1.5.1. Non-manual markers and their properties in non- predictive/peripheral conditionals");
 		gp5.setGrammarPartOrder(1);
 		gp5.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp5.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
@@ -8841,7 +8865,8 @@ public class AppStart_prova{
 		gp5.setDeleted(false);
 		gp5.setEditorList(editorList);
 		gp5.setElementNumber("3");
-		gp5.setGrammarPartName("3.5.1.5.3. Order of the components of the non- predictive/peripheral conditional clause");
+		gp5.setGrammarPartName(
+				"3.5.1.5.3. Order of the components of the non- predictive/peripheral conditional clause");
 		gp5.setGrammarPartOrder(3);
 		gp5.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp5.setGrammarPartTYpe(GrammarPartType.PARAGRAPH);
@@ -8885,7 +8910,7 @@ public class AppStart_prova{
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -10451,10 +10476,10 @@ public class AppStart_prova{
 		gp2.save();
 		return createGrammar2(g, gp, gp1, gp2, gp3, gp4, u, contentProviderList, editorList);
 	}
-	
-	
-public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1, GrammarPart gp2, GrammarPart gp3, GrammarPart gp4, User u, List<User> contentProviderList, List<User> editorList ){
-		
+
+	public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1, GrammarPart gp2, GrammarPart gp3,
+			GrammarPart gp4, User u, List<User> contentProviderList, List<User> editorList) {
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10471,7 +10496,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10488,7 +10513,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10505,7 +10530,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10522,7 +10547,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10539,7 +10564,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10556,7 +10581,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10573,7 +10598,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10590,7 +10615,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10607,7 +10632,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10624,7 +10649,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10641,7 +10666,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10658,7 +10683,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10675,7 +10700,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10692,7 +10717,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -10709,7 +10734,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10726,7 +10751,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10743,7 +10768,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10760,7 +10785,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10777,7 +10802,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10794,7 +10819,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10811,7 +10836,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10828,7 +10853,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10845,7 +10870,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10862,7 +10887,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10879,7 +10904,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10896,7 +10921,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -10913,7 +10938,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10930,7 +10955,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10947,7 +10972,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10964,7 +10989,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -10981,7 +11006,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -10998,7 +11023,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11015,7 +11040,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11032,7 +11057,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11049,7 +11074,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11066,7 +11091,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11083,7 +11108,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11100,7 +11125,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11117,7 +11142,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11134,7 +11159,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -11151,7 +11176,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11168,7 +11193,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11185,7 +11210,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11202,7 +11227,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11219,7 +11244,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11236,7 +11261,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11253,7 +11278,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
@@ -11270,7 +11295,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -11287,7 +11312,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11304,7 +11329,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11321,7 +11346,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11338,7 +11363,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11355,7 +11380,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11372,7 +11397,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11389,7 +11414,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11406,7 +11431,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11423,7 +11448,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11440,7 +11465,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11457,7 +11482,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11474,7 +11499,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11491,7 +11516,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11508,7 +11533,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11525,7 +11550,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11542,7 +11567,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11559,7 +11584,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11576,7 +11601,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -11593,7 +11618,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11610,7 +11635,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11627,7 +11652,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11644,7 +11669,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11661,7 +11686,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11678,7 +11703,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11695,7 +11720,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11712,7 +11737,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11729,7 +11754,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -11746,7 +11771,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11763,7 +11788,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11780,7 +11805,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11797,7 +11822,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11814,7 +11839,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11831,7 +11856,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11848,7 +11873,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11865,7 +11890,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -11882,7 +11907,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -11899,7 +11924,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11916,7 +11941,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11933,7 +11958,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11950,7 +11975,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11967,7 +11992,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -11984,7 +12009,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12001,7 +12026,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12018,7 +12043,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12035,7 +12060,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12052,7 +12077,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12069,7 +12094,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12086,7 +12111,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12103,7 +12128,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -12120,7 +12145,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12137,7 +12162,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12154,7 +12179,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12171,7 +12196,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12188,7 +12213,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12205,7 +12230,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12222,7 +12247,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12239,7 +12264,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12256,7 +12281,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12273,7 +12298,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12290,7 +12315,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12307,7 +12332,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12324,7 +12349,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -12341,7 +12366,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12358,7 +12383,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12375,7 +12400,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12392,7 +12417,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12409,7 +12434,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12426,7 +12451,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -12443,7 +12468,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12460,7 +12485,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12477,7 +12502,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12494,7 +12519,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12528,7 +12553,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12545,7 +12570,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -12562,7 +12587,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12579,7 +12604,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12596,7 +12621,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12613,7 +12638,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12630,7 +12655,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12647,7 +12672,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12664,7 +12689,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12681,7 +12706,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12698,7 +12723,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -12715,7 +12740,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12732,7 +12757,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12749,7 +12774,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12766,7 +12791,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12783,7 +12808,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12800,7 +12825,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12817,7 +12842,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12834,7 +12859,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12851,7 +12876,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12868,7 +12893,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12885,7 +12910,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -12902,7 +12927,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12919,7 +12944,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -12936,7 +12961,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -12953,7 +12978,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -12970,7 +12995,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -12987,7 +13012,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -13004,7 +13029,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp3 = new GrammarPart();
 		gp3.setAuthor(u);
 		gp3.setContentProviderList(contentProviderList);
@@ -13021,7 +13046,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp3.save();
 		gp2.getParts().add(gp3);
 		gp2.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -13038,7 +13063,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -13055,7 +13080,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp4 = new GrammarPart();
 		gp4.setAuthor(u);
 		gp4.setContentProviderList(contentProviderList);
@@ -13072,7 +13097,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp4.save();
 		gp3.getParts().add(gp4);
 		gp3.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13089,7 +13114,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13106,7 +13131,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13123,7 +13148,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13140,7 +13165,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13157,7 +13182,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp1 = new GrammarPart();
 		gp1.setAuthor(u);
 		gp1.setContentProviderList(contentProviderList);
@@ -13174,7 +13199,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp1.save();
 		gp.getParts().add(gp1);
 		gp.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13191,7 +13216,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13208,7 +13233,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13225,7 +13250,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13242,7 +13267,7 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		gp2 = new GrammarPart();
 		gp2.setAuthor(u);
 		gp2.setContentProviderList(contentProviderList);
@@ -13259,14 +13284,13 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp2.save();
 		gp1.getParts().add(gp2);
 		gp1.save();
-		
+
 		g = addBackMatter(g, u, contentProviderList, editorList);
-		
+
 		return g;
 	}
-	
 
-	public static List<String> a = new ArrayList<>(); 
+	public static List<String> a = new ArrayList<>();
 
 	public static void printGrammar(Grammar g) {
 		List<GrammarPart> l = g.getParts();
@@ -13278,17 +13302,17 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 			}
 
 		});
-		for(GrammarPart i : l) {
+		for (GrammarPart i : l) {
 			printGrammarPart(i, 1);
 		}
 	}
-	
+
 	private static void printGrammarPart(GrammarPart gp, int j) {
 		String r = "";
 		for (int i = 0; i < j; i++)
 			r += "---";
 		System.out.println(r + gp.getGrammarPartName());
-		if(a.contains(gp.getUuid())) {
+		if (a.contains(gp.getUuid())) {
 			System.out.println("Duplicato " + gp.getGrammarPartName() + " " + gp.getParent().getGrammarPartName());
 			throw new RuntimeException();
 		}
@@ -13303,124 +13327,97 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 			}
 
 		});
-		for(GrammarPart gpp : l) {
-			printGrammarPart(gpp, j+1);
+		for (GrammarPart gpp : l) {
+			printGrammarPart(gpp, j + 1);
 		}
 	}
 
-
 	private static Grammar addBackMatter(Grammar g, User u, List<User> contentProviderList, List<User> editorList) {
-		
+
 		GrammarPart gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Appendix 1");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
+		gp.setElementNumber("" + (g.getParts().size() + 1));
+		gp.setGrammarPartName("Appendices");
+		gp.setGrammarPartOrder((g.getParts().size() + 1));
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Appendix 1");
+		gp.setHtml("Appendices");
 		gp.setParent(null);
 		gp.setParts(new LinkedList<GrammarPart>());
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
+		/*
+		 * gp = new GrammarPart(); gp.setAuthor(u);
+		 * gp.setContentProviderList(contentProviderList); gp.setDeleted(false);
+		 * gp.setEditorList(editorList); gp.setElementNumber("" + (g.getParts().size() +
+		 * 1)); gp.setGrammarPartName("Appendix 2");
+		 * gp.setGrammarPartOrder((g.getParts().size() + 1));
+		 * gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		 * gp.setGrammarPartTYpe(GrammarPartType.ARTICLE); gp.setHtml("Appendix 2");
+		 * gp.setParent(null); gp.setParts(new LinkedList<GrammarPart>()); gp.save();
+		 * g.getParts().add(gp); g.save();
+		 * 
+		 * gp = new GrammarPart(); gp.setAuthor(u);
+		 * gp.setContentProviderList(contentProviderList); gp.setDeleted(false);
+		 * gp.setEditorList(editorList); gp.setElementNumber("" + (g.getParts().size() +
+		 * 1)); gp.setGrammarPartName("Appendix 3");
+		 * gp.setGrammarPartOrder((g.getParts().size() + 1));
+		 * gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		 * gp.setGrammarPartTYpe(GrammarPartType.ARTICLE); gp.setHtml("Appendix 3");
+		 * gp.setParent(null); gp.setParts(new LinkedList<GrammarPart>()); gp.save();
+		 * g.getParts().add(gp); g.save();
+		 * 
+		 * gp = new GrammarPart(); gp.setAuthor(u);
+		 * gp.setContentProviderList(contentProviderList); gp.setDeleted(false);
+		 * gp.setEditorList(editorList); gp.setElementNumber("" + (g.getParts().size() +
+		 * 1)); gp.setGrammarPartName("Appendix 4");
+		 * gp.setGrammarPartOrder((g.getParts().size() + 1));
+		 * gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		 * gp.setGrammarPartTYpe(GrammarPartType.ARTICLE); gp.setHtml("Appendix 4");
+		 * gp.setParent(null); gp.setParts(new LinkedList<GrammarPart>()); gp.save();
+		 * g.getParts().add(gp); g.save();
+		 * 
+		 * gp = new GrammarPart(); gp.setAuthor(u);
+		 * gp.setContentProviderList(contentProviderList); gp.setDeleted(false);
+		 * gp.setEditorList(editorList); gp.setElementNumber("" + (g.getParts().size() +
+		 * 1)); gp.setGrammarPartName("Appendix 5");
+		 * gp.setGrammarPartOrder((g.getParts().size() + 1));
+		 * gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		 * gp.setGrammarPartTYpe(GrammarPartType.ARTICLE); gp.setHtml("Appendix 5");
+		 * gp.setParent(null); gp.setParts(new LinkedList<GrammarPart>()); gp.save();
+		 * g.getParts().add(gp); g.save();
+		 */
+
 		gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Appendix 2");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
+		gp.setElementNumber("" + (g.getParts().size() + 1));
+		gp.setGrammarPartName("Complete list of references");
+		gp.setGrammarPartOrder((g.getParts().size() + 1));
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Appendix 2");
+		gp.setHtml("Complete list of references");
 		gp.setParent(null);
 		gp.setParts(new LinkedList<GrammarPart>());
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
+
 		gp = new GrammarPart();
 		gp.setAuthor(u);
 		gp.setContentProviderList(contentProviderList);
 		gp.setDeleted(false);
 		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Appendix 3");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
-		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
-		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Appendix 3");
-		gp.setParent(null);
-		gp.setParts(new LinkedList<GrammarPart>());
-		gp.save();
-		g.getParts().add(gp);
-		g.save();
-		
-		gp = new GrammarPart();
-		gp.setAuthor(u);
-		gp.setContentProviderList(contentProviderList);
-		gp.setDeleted(false);
-		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Appendix 4");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
-		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
-		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Appendix 4");
-		gp.setParent(null);
-		gp.setParts(new LinkedList<GrammarPart>());
-		gp.save();
-		g.getParts().add(gp);
-		g.save();
-		
-		gp = new GrammarPart();
-		gp.setAuthor(u);
-		gp.setContentProviderList(contentProviderList);
-		gp.setDeleted(false);
-		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Appendix 5");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
-		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
-		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Appendix 5");
-		gp.setParent(null);
-		gp.setParts(new LinkedList<GrammarPart>());
-		gp.save();
-		g.getParts().add(gp);
-		g.save();
-		
-		gp = new GrammarPart();
-		gp.setAuthor(u);
-		gp.setContentProviderList(contentProviderList);
-		gp.setDeleted(false);
-		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Complete List of References/Bibliography");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
-		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
-		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Complete List of References/Bibliography");
-		gp.setParent(null);
-		gp.setParts(new LinkedList<GrammarPart>());
-		gp.save();
-		g.getParts().add(gp);
-		g.save();
-		
-		gp = new GrammarPart();
-		gp.setAuthor(u);
-		gp.setContentProviderList(contentProviderList);
-		gp.setDeleted(false);
-		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
+		gp.setElementNumber("" + (g.getParts().size() + 1));
 		gp.setGrammarPartName("Glossary of grammatical terms");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
+		gp.setGrammarPartOrder((g.getParts().size() + 1));
 		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
 		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
 		gp.setHtml("Glossary of grammatical terms");
@@ -13429,43 +13426,31 @@ public static Grammar createGrammar2(Grammar g, GrammarPart gp, GrammarPart gp1,
 		gp.save();
 		g.getParts().add(gp);
 		g.save();
-		
-		gp = new GrammarPart();
-		gp.setAuthor(u);
-		gp.setContentProviderList(contentProviderList);
-		gp.setDeleted(false);
-		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Affiliation info of authors");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
-		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
-		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Affiliation info of authors");
-		gp.setParent(null);
-		gp.setParts(new LinkedList<GrammarPart>());
-		gp.save();
-		g.getParts().add(gp);
-		g.save();
-		
-		gp = new GrammarPart();
-		gp.setAuthor(u);
-		gp.setContentProviderList(contentProviderList);
-		gp.setDeleted(false);
-		gp.setEditorList(editorList);
-		gp.setElementNumber("" + (g.getParts().size()+1));
-		gp.setGrammarPartName("Index");
-		gp.setGrammarPartOrder((g.getParts().size()+1));
-		gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
-		gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
-		gp.setHtml("Index");
-		gp.setParent(null);
-		gp.setParts(new LinkedList<GrammarPart>());
-		gp.save();
-		g.getParts().add(gp);
-		g.save();
-		
+
+		/*
+		 * gp = new GrammarPart(); gp.setAuthor(u);
+		 * gp.setContentProviderList(contentProviderList); gp.setDeleted(false);
+		 * gp.setEditorList(editorList); gp.setElementNumber("" + (g.getParts().size() +
+		 * 1)); gp.setGrammarPartName("Affiliation info of authors");
+		 * gp.setGrammarPartOrder((g.getParts().size() + 1));
+		 * gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		 * gp.setGrammarPartTYpe(GrammarPartType.ARTICLE);
+		 * gp.setHtml("Affiliation info of authors"); gp.setParent(null);
+		 * gp.setParts(new LinkedList<GrammarPart>()); gp.save(); g.getParts().add(gp);
+		 * g.save();
+		 * 
+		 * gp = new GrammarPart(); gp.setAuthor(u);
+		 * gp.setContentProviderList(contentProviderList); gp.setDeleted(false);
+		 * gp.setEditorList(editorList); gp.setElementNumber("" + (g.getParts().size() +
+		 * 1)); gp.setGrammarPartName("Index");
+		 * gp.setGrammarPartOrder((g.getParts().size() + 1));
+		 * gp.setGrammarPartStatus(GrammarPartStatus.DRAFT);
+		 * gp.setGrammarPartTYpe(GrammarPartType.ARTICLE); gp.setHtml("Index");
+		 * gp.setParent(null); gp.setParts(new LinkedList<GrammarPart>()); gp.save();
+		 * g.getParts().add(gp); g.save();
+		 */
+
 		return g;
 	}
-	
 
 }

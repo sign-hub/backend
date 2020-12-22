@@ -23,7 +23,7 @@ import utils.StringUtil;
 public class Contacts extends ModelUuid  {
 	
 	public static enum ContactTool {
-		TESTING, ATLAS, GRAMMAR, STREAMING;
+		TESTING, ATLAS, GRAMMAR, STREAMING, GENERAL, TECH;
 		
 		public static ContactTool tryBuildContactToolFromName(String name) {
 			if (StringUtil.isNil(name)) {

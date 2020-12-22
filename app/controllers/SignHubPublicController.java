@@ -116,8 +116,8 @@ public class SignHubPublicController extends BaseController {
 		renderJSON(jsonResponse);
 	}
 	
-	public static void getFeaturesMapByLanguage(String code) {
-		renderJSON(FeatureService.instance().getFeaturesMapByLanguage(code));
+	public static void getFeaturesMapByLanguage(String code, String id) {
+		renderJSON(FeatureService.instance().getFeaturesMapByLanguage(code, id));
 	}
 	
 	public static void extractFeatures(String reportUuid) {

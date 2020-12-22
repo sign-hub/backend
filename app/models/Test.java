@@ -537,6 +537,22 @@ public class Test extends ModelUuid {
 		}
 		return false;
 	}
+	
+	
+	public boolean getCanViewForReport(UserService userService) {
+		User user = userService.getCurrentUserLogged();
+		if(this.getAuthor().equals(user)) {
+			//Logger.info("TEST getCanView " + this.testName + " is author");
+			return true;
+		}
+		if(this.getTestType().equals(TestType.TESTINGTOOL) && 
+				(user.retrieveUserRolesString().contains(Roles.TESTING_EDITOR) || user.retrieveUserRolesString().contains(Roles.TESTING_USER))&& 
+				this.getContentProviderList().contains(user)) {
+				//Logger.info("TEST getCanView " + this.testName + " is in list!");
+				return true;
+		}
+		return false;
+	}
 
 	public boolean getCanView(UserService userService) {
 		if (/*userService.hasCurrentUserLoggedAdminRole()*/ userService.checkAdminAndTool(QuestionService.getToolType(this))) {

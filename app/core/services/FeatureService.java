@@ -624,6 +624,7 @@ public class FeatureService {
 		SignLanguage sl;
 		if (r.getIsComplessive()) {
 			sl = null;
+			return null;
 		} else {
 			String languageName = r.getLanguageName();
 			sl = SignLanguage.findByName(languageName);
@@ -695,6 +696,11 @@ public class FeatureService {
 		public String error;
 	}
 
+	public static class ParseForPersonalJudgment {
+		public FeatureValue fv;
+		public Boolean personalJudgmentVal;
+	}
+	
 	private ParseReportResponse parseReportCsv(File reportFile, Map<String, Feature> featureMap, SignLanguage sl, Test t) {
 		BufferedReader br = null;
 		String line = "";
@@ -704,6 +710,7 @@ public class FeatureService {
 		ret.errors = new HashSet<ParseReportResponseError>();
 		retVal = new HashSet<FeatureValue>();
 		Map<Feature, Map<String, String>> multiFeatureMap = new HashMap<Feature, Map<String, String>>();
+		Map<String, ParseForPersonalJudgment> personalJudgmentMap = new HashMap<String, ParseForPersonalJudgment>();
 		try {
 
 			br = new BufferedReader(new FileReader(reportFile));
@@ -723,6 +730,20 @@ public class FeatureService {
 					}
 					Logger.warn("featureId: " + featureId);
 					if (!featureMap.containsKey(featureId)) {
+						if(group.equals("_Judgement")) {
+							
+							if(!personalJudgmentMap.containsKey(section + "-_-" + slide)) {
+								personalJudgmentMap.put(section + "-_-" + slide, new ParseForPersonalJudgment());
+							}
+							Boolean pjv = false;
+							if(value == "998") {
+								pjv = false;
+							} else if(value == "999") {
+								pjv = true;
+							}
+							personalJudgmentMap.get(section + "-_-" + slide).personalJudgmentVal = pjv;
+							continue;
+						}
 						FeatureChoiche fc = FeatureChoiche.findByGroupName(group);
 						if(fc != null) {
 							Feature fcf = fc.getFeature();
@@ -761,40 +782,10 @@ public class FeatureService {
 						}
 						if(s != null) {
 							SlideContentComponent scc = null;
-							for(SlideContentComponent sccc : s.getSlideContent()) {
-								Option o = null;
-								for(Option oo : sccc.getOptions()) {
-									if(oo.getKey().equals("groupName")) {
-										o = oo;
-										break;
-									}
-								}
-								if(o != null && o.getValue().equals(group)) {
-									scc = sccc;
-									break;
-								}
-							}
+							scc = getSlideContentComponentFromSlideAndGroupName(group, s);
 							
 							if(scc != null) {
-								if(scc.getComponentType().equals(ComponentType.RADIO)) {
-									String index = null;
-									for(Option o : scc.getOptions()) {
-										if(o.getKey().startsWith("radioComponentLabel") && o.getValue().equals(value)) {
-											String key = o.getKey();
-											index = key.split("_")[1];
-											break;
-										}
-									}
-									if(index != null) {
-										index = "radioComponentValue_" + index;
-										for(Option o : scc.getOptions()) {
-											if(o.getKey().equals(index)) {
-												vv = o.getValue();
-												break;
-											}
-										}
-									}
-								}
+								vv = extractSingleValueFromRadio(value, scc);
 							}
 						} else {
 							Logger.error("Slide not found???");
@@ -807,17 +798,27 @@ public class FeatureService {
 						}
 						
 						Logger.warn("feature: " + feature.getUuid());
-						fv = getSingleTypeFeatureValue(feature, sl, value);
+						FeatureValue fv1 = getSingleTypeFeatureValue(feature, sl, value);
+						if(feature.getPersonalJudgment() != null && feature.getPersonalJudgment()) {
+							if(!personalJudgmentMap.containsKey(section + "-_-" + slide)) {
+								personalJudgmentMap.put(section + "-_-" + slide, new ParseForPersonalJudgment());
+							}
+							personalJudgmentMap.get(section + "-_-" + slide).fv = fv1;
+						} else {
+							fv = fv1;
+							}
 					} /*else if(feature.getFeatureType().equals(FeatureType.MULTIPLE)) {
 						fv = getMultipleTypeFeatureValue(feature, sl, value);
 					}*/
 					if(fv != null)
 						retVal.add(fv);
 					else {
-						ParseReportResponseError e = new ParseReportResponseError();
-						e.error = "No valid value found " + value;
-						e.f = new FeatureWrapper(feature);
-						ret.errors.add(e);
+						if(feature.getPersonalJudgment() == null || feature.getPersonalJudgment() == false) {
+							ParseReportResponseError e = new ParseReportResponseError();
+							e.error = "No valid value found " + value;
+							e.f = new FeatureWrapper(feature);
+							ret.errors.add(e);
+						}
 					}
 				}
 
@@ -838,6 +839,13 @@ public class FeatureService {
 						
 				}
 			}
+			
+			if(personalJudgmentMap != null) {
+				for(ParseForPersonalJudgment pj : personalJudgmentMap.values()) {
+					pj.fv.setPersonalJudgment(pj.personalJudgmentVal);
+					retVal.add(pj.fv);
+				}
+			}
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -854,6 +862,48 @@ public class FeatureService {
 		}
 		ret.signLanguage = sl.getName();
 		ret.setValues(retVal);
+		return ret;
+	}
+
+	private String extractSingleValueFromRadio(String value, SlideContentComponent scc) {
+		String vv = null;
+		if(scc.getComponentType().equals(ComponentType.RADIO)) {
+			String index = null;
+			for(Option o : scc.getOptions()) {
+				if(o.getKey().startsWith("radioComponentLabel") && o.getValue().equals(value)) {
+					String key = o.getKey();
+					index = key.split("_")[1];
+					break;
+				}
+			}
+			if(index != null) {
+				index = "radioComponentValue_" + index;
+				for(Option o : scc.getOptions()) {
+					if(o.getKey().equals(index)) {
+						vv = o.getValue();
+						break;
+					}
+				}
+			}
+		}
+		return vv;
+	}
+
+	private SlideContentComponent getSlideContentComponentFromSlideAndGroupName(String group, Slide s) {
+		SlideContentComponent ret = null;
+		for(SlideContentComponent sccc : s.getSlideContent()) {
+			Option o = null;
+			for(Option oo : sccc.getOptions()) {
+				if(oo.getKey().equals("groupName")) {
+					o = oo;
+					break;
+				}
+			}
+			if(o != null && o.getValue().equals(group)) {
+				ret = sccc;
+				break;
+			}
+		}
 		return ret;
 	}
 
@@ -962,12 +1012,23 @@ public class FeatureService {
 			this.bluePrintSection = f.getBluePrintSection();
 			this.chapterName = f.getChapterName();
 			this.chapterUuid = f.getChapterUuid();
-			this.val = new FeatValOpt();
+			this.val = new LinkedList<FeatValOpt>();
+			
 			if (featureValue != null) {
 				for( FeatureOption fo : f.getOptions()) {
 					if (fo.optionValue.equals(featureValue.getValue())) {
-						this.val.label = fo.optionKey;
-						this.val.val = fo.optionValue;
+						FeatValOpt val = new FeatValOpt();
+						val.label = fo.optionKey;
+						val.val = fo.optionValue;
+						this.val.add(val);
+						break;
+					}
+					
+					if (fo.optionKey.equals(featureValue.getValue())) {
+						FeatValOpt val = new FeatValOpt();
+						val.label = fo.optionValue;
+						val.val = fo.optionKey;
+						this.val.add(val);
 						break;
 					}
 				}
@@ -979,6 +1040,9 @@ public class FeatureService {
 //						break;
 //					}
 //				}
+			}
+			if(this.val.isEmpty()) {
+				this.val.add(new FeatValOpt());
 			}
 		}
 
@@ -995,13 +1059,17 @@ public class FeatureService {
 		public FeatureArea area;
 		public Boolean active = true;
 		public String bluePrintSection;
-		public FeatValOpt val;
+		public List<FeatValOpt> val;
 		public String chapterName;
 		public String chapterUuid;
 	}
 
-	public Map<String, List<FeatVal>> getFeaturesMapByLanguage(String code) {
-		SignLanguage sl = SignLanguage.findByCode(code);
+	public Map<String, List<FeatVal>> getFeaturesMapByLanguage(String code, String uuid) {
+		SignLanguage sl = null;
+		if(!StringUtil.isNil(code))
+			sl = SignLanguage.findByCode(code);
+		else if(!StringUtil.isNil(uuid))
+			sl = SignLanguage.findById(uuid);
 		if (sl == null) {
 			return null;
 		}
@@ -1011,16 +1079,19 @@ public class FeatureService {
 
 		Map<String, FeatureValue> featureValueMap = new HashMap<String, FeatureValue>();
 		List<FeatureValue> values = FeatureValue.findBySignLanguage(sl);
+		Logger.warn("Found " + values.size() + " values");
 		for (FeatureValue fv : values) {
 			if (fv == null)
 				continue;
 			featureValueMap.put(fv.getFeature().getUuid(), fv);
 		}
+		Logger.warn("Found " + featureValueMap.size() + " values in map");
 		FeatVal fv;
 		for (Feature f : all) {
 			if (!ret.containsKey(f.getArea().getName())) {
 				ret.put(f.getArea().getName(), new LinkedList<FeatVal>());
 			}
+			Logger.warn("Feature map contains " + f.getUuid() + " " + featureValueMap.containsKey(f.getUuid()));
 			fv = new FeatVal(f, featureValueMap.get(f.getUuid()));
 			ret.get(f.getArea().getName()).add(fv);
 		}
@@ -1542,14 +1613,73 @@ public class FeatureService {
 			this.parts = buildListGrammarPartsObjectFromPartList(part.getGrammar(),part.getParts());
 			this.features = buildListFeatureWrapperFromFeatureList(part.getFeatures());
 		}
+		
+		public GrammarPartObject(GrammarPart part, boolean isFiltered) {
+			this.uuid = part.getUuid();
+			this.isDeleted = part.getDeleted();
+			this.elementNumber = part.getElementNumber();
+			this.grammarPartOrder = part.getGrammarPartOrder();
+			this.completePartOrder = part.getCompleteOrder();
+			this.completePartOrderNow = part.getCompleteOrderNow();
+			this.name = part.getGrammarPartName();
+			this.status = part.getGrammarPartStatus().name();
+			this.type = part.getGrammarPartTYpe().name();
+			this.parent = null;
+			if (part.getParent() != null)
+				this.parent = part.getParent().getUuid();
+			this.creationDate = StringUtil.date(part.getCreationDate(), part.CREATION_DATE_FORMAT);
+			this.revisionDate = StringUtil.date(part.getRevisionDate(), part.REVISION_DATE_FORMAT);
+			this.parts = buildListGrammarPartsObjectFromPartList(part.getGrammar(),part.getParts());
+			this.features = buildListFeatureWrapperFromFeatureList(part.getFeatures());
+		}
 
-		private List<FeatureWrapper> buildListFeatureWrapperFromFeatureList(List<Feature> features) {
+		public GrammarPartObject() {
+			// TODO Auto-generated constructor stub
+		}
+
+		private static List<FeatureWrapper> buildListFeatureWrapperFromFeatureList(List<Feature> features) {
 			List<FeatureWrapper> ret = new LinkedList<FeatureWrapper>();
 			if(features != null) {
 				for(Feature f : features) {
 					ret.add(new FeatureWrapper(f));
 				}
 			}
+			return ret;
+		}
+
+		public static GrammarPartObject buildFiltered(GrammarPart part) {
+			GrammarPartObject ret = new GrammarPartObject();
+			ret.uuid = part.getUuid();
+			ret.isDeleted = part.getDeleted();
+			ret.elementNumber = part.getElementNumber();
+			ret.grammarPartOrder = part.getGrammarPartOrder();
+			ret.completePartOrder = part.getCompleteOrder();
+			ret.completePartOrderNow = part.getCompleteOrderNow();
+			ret.name = part.getGrammarPartName();
+			ret.status = part.getGrammarPartStatus().name();
+			ret.type = part.getGrammarPartTYpe().name();
+			ret.parent = null;
+			if (part.getParent() != null)
+				ret.parent = part.getParent().getUuid();
+			ret.creationDate = StringUtil.date(part.getCreationDate(), part.CREATION_DATE_FORMAT);
+			ret.revisionDate = StringUtil.date(part.getRevisionDate(), part.REVISION_DATE_FORMAT);
+			List<GrammarPartObject> pts = buildListGrammarPartsObjectFromPartList(part.getGrammar(),part.getParts());
+			boolean toAdd = false;
+			if(pts != null && !pts.isEmpty()) {
+				ret.parts = pts;
+				toAdd = true;
+			} else {
+				ret.parts = new ArrayList<>();
+			}
+			List<FeatureWrapper> fts = buildListFeatureWrapperFromFeatureList(part.getFeatures());
+			if(fts != null && !fts.isEmpty()) {
+				ret.features = fts;
+				toAdd = true;
+			} else {
+				ret.features = new ArrayList<>();
+			}
+			if(!toAdd)
+				return null;
 			return ret;
 		}
 
@@ -1563,7 +1693,9 @@ public class FeatureService {
 				part.setGrammar(g);
 				part.save();
 			}
-			ret.add(new GrammarPartObject(part));
+			GrammarPartObject gpo = GrammarPartObject.buildFiltered(part);
+			if(gpo != null)
+				ret.add(gpo);
 		}
 		Collections.sort(ret, new Comparator<GrammarPartObject>() {
 

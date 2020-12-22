@@ -775,6 +775,12 @@ public class TestService {
 		public String coordinates;
 		public String grammarReference;
 		public String uuid;
+		public String cpPHON;
+		public String cpLEX;
+		public String cpMORPH;
+		public String cpSYN;
+		public String cpPRAG;
+		public String ack;
 		
 		public SignLanguageWrapper(SignLanguage sl) {
 			this.code = sl.getCode();
@@ -788,6 +794,34 @@ public class TestService {
 			this.coordinates = sl.getCoordinates();
 			this.grammarReference = sl.getGrammarReference();
 			this.uuid = sl.getUuid();
+			this.cpPHON = sl.getCpPHON();
+			this.cpLEX = sl.getCpLEX();
+			this.cpMORPH = sl.getCpMORPH();
+			this.cpSYN = sl.getCpSYN();
+			this.cpPRAG = sl.getCpPRAG();
+			this.ack = "";
+			String sep = "";
+			if(!StringUtil.isNil(sl.getAckPHON())) {
+				ack += sep + sl.getAckPHON();
+				sep += "</br>";
+			}
+			if(!StringUtil.isNil(sl.getAckLEX())) {
+				ack += sep + sl.getAckLEX();
+				sep += "</br>";
+			}
+			if(!StringUtil.isNil(sl.getAckMORPH())) {
+				ack += sep + sl.getAckMORPH();
+				sep += "</br>";
+			}
+			if(!StringUtil.isNil(sl.getAckSYN())) {
+				ack += sep + sl.getAckSYN();
+				sep += "</br>";
+			}
+			if(!StringUtil.isNil(sl.getAckPRAG())) {
+				ack += sep + sl.getAckPRAG();
+				sep += "</br>";
+			}
+			
 		}
 		
 		public SignLanguageWrapper() {
@@ -815,13 +849,29 @@ public class TestService {
 			sl.setCoordinates("[42.6384261,12.674297]");
 		if(StringUtil.isNil(sl.getCountries()))
 			sl.setCountries("country");
-		sl.setUsersDescription("85.000 deaf people, 150.000 hard-of hearing people");
-		sl.setDeafCulture("Theater, Deaf clubs");
-		sl.setDeafEducation("pre-school, high school");
-		sl.setLinguisticStudies("corpus data by...");
-		sl.setStatus("sign language law, National Congress of Brazil, since 2002");
-		sl.setArea("Europe");
-		sl.setAuthor("Ronice Müller de Quadros");
+		
+//		sl.setUsersDescription("85.000 deaf people, 150.000 hard-of hearing people");
+//		sl.setDeafCulture("Theater, Deaf clubs");
+//		sl.setDeafEducation("pre-school, high school");
+//		sl.setLinguisticStudies("corpus data by...");
+//		sl.setStatus("sign language law, National Congress of Brazil, since 2002");
+//		sl.setArea("Europe");
+//		sl.setAuthor("Ronice Müller de Quadros");
+		if(StringUtil.isNil(sl.getUsersDescription()))
+			sl.setUsersDescription("N/A");
+		if(StringUtil.isNil(sl.getDeafCulture()))
+			sl.setDeafCulture("N/A");
+		if(StringUtil.isNil(sl.getDeafEducation()))
+			sl.setDeafEducation("N/A");
+		if(StringUtil.isNil(sl.getLinguisticStudies()))
+			sl.setLinguisticStudies("N/A");
+		if(StringUtil.isNil(sl.getStatus()))
+			sl.setStatus("N/A");
+		if(StringUtil.isNil(sl.getArea()))
+			sl.setArea("N/A");
+		if(StringUtil.isNil(sl.getAuthor()))
+			sl.setAuthor("N/A");
+		
 		return sl;
 	}
 

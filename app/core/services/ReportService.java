@@ -249,7 +249,7 @@ public class ReportService {
 		csv += sep;
 		/* csv += "Signing group";
 		csv += sep; */
-		csv += "Participant Custom1"; // J
+		csv += "Partcipant Custom1"; // J
 		csv += sep;
 		csv += "Participant Custom2"; // K
 		csv += sep;
@@ -1188,17 +1188,18 @@ public class ReportService {
 			if (/*userService.hasCurrentUserLoggedRole("ADMIN")*/ userService.checkAdminAndTool(ToolsTypes.TESTING))
 				reportObjs = Report.findAllByType(type);
 			else {
-				List<Report> reportObjsL = Report.findAllByType(type);
-				reportObjs = new LinkedList<Report>();
+//				reportObjs = new LinkedList<Report>();
 				User u = userService.getCurrentUserLogged();
-				for (Report r : reportObjsL) {
+				reportObjs = Report.findAllByTypeAndContentProvide(type, u);
+//				List<Report> reportObjsL = Report.findAllByTypeAndContentProvide(type, u);
+//				for (Report r : reportObjsL) {
 //					if(r.getAuthor().getUuid().equals(u.getUuid()))
 //						reportObjs.add(r);
-					if(r.getReportTest().getAuthor().getUuid().equals(u.getUuid()))
-						reportObjs.add(r);
-					//if (r.getReportTest().getCanView(userService))
-					//	reportObjs.add(r);
-				}
+//					if(r.getReportTest().getAuthor().getUuid().equals(u.getUuid()))
+//						reportObjs.add(r);
+//					else if (r.getReportTest().getCanViewForReport(userService))
+//						reportObjs.add(r);
+//				}
 				// reportObjs = Report.findAllByTypeAndContentProviderList(type,
 				// userService.getCurrentUserLogged());
 			}

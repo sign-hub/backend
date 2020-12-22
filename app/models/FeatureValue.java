@@ -31,6 +31,9 @@ public class FeatureValue extends ModelUuid  {
 	@Basic
 	private String value;
 
+	@Basic
+	private Boolean personalJudgment = false;
+
 	public FeatureValue(Feature f, String v, SignLanguage sl) {
 		this.feature = f;
 		this.value = v;
@@ -85,6 +88,12 @@ public class FeatureValue extends ModelUuid  {
 	
 	public static void deleteAllByFeature(Feature ft) {
 		delete("feature=?", ft);	
+	}
+	public void setPersonalJudgment(Boolean personalJudgmentVal) {
+		this.personalJudgment = personalJudgmentVal;
+	}
+	public Boolean getPersonalJudgment() {
+		return this.personalJudgment;
 	}
 	
 	
